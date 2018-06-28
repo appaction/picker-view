@@ -1,0 +1,23 @@
+PODS:
+  - Anchorage (4.2.2)
+  - PickerView (0.1.0):
+    - Anchorage
+
+DEPENDENCIES:
+  - PickerView (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Anchorage
+
+EXTERNAL SOURCES:
+  PickerView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Anchorage: cba8707ea6475f604e04047882ba47c07e4b2ac1
+  PickerView: 0bb738f7a49c14c6e0be55638616d0799519a135
+
+PODFILE CHECKSUM: 586fe3e47eb8cae70cdad70b5a128b3262b45ed4
+
+COCOAPODS: 1.5.3
