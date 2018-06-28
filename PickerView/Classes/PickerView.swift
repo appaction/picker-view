@@ -6,14 +6,22 @@ public protocol PickerViewDelegate: class {
     func pickerView(_ pickerView: PickerView, selected index: Int)
 }
 
+public protocol PickerViewDataSource: class {
+    func pickerViewNumberOfItems(_ pickerView: PickerView) -> Int
+    func pickerView(_ pickerView: PickerView, itemAtIndex index: Int) -> String
+}
+
 public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    public weak var delegate: PickerViewDelegate?
+    public weak var delegate: PickerViewDelegate? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    public weak var dataSource: PickerViewDataSource?
     private var selectedIndex: Int?
     private let layout = UICollectionViewFlowLayout()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     private let markerView = UIView()
-    
-    let cameraModes = ["Voice Over", "Normal", "Face Over", "Lip Sync"]
     let cellWidth: CGFloat = 120
     let cellSpacing: CGFloat = 20
     
@@ -59,12 +67,12 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cameraModes.count
+        return dataSource?.pickerViewNumberOfItems(self) ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PickerViewCell", for: indexPath) as! PickerViewCell
-        cell.label.text = cameraModes[indexPath.row]
+        cell.label.text = dataSource?.pickerView(self, itemAtIndex: indexPath.row)
         return cell
     }
     
@@ -93,13 +101,28 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
             return
         }
         
+        if let index = selectedIndex {
+            if indexPath.row == index {
+                print(velocity.x)
+                if velocity.x >= 0, let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: IndexPath(item: index + 1, section: 0)) {
+                    targetContentOffset.pointee.x = attributes.frame.origin.x - layout.sectionInset.left
+                    return
+                } else {
+                    if let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: IndexPath(item: index - 1, section: 0)) {
+                        targetContentOffset.pointee.x = attributes.frame.origin.x - layout.sectionInset.left
+                        return
+                    }
+                }
+            }
+        }
+
         targetContentOffset.pointee.x = attributes.frame.origin.x - layout.sectionInset.left
-        
     }
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard let index = calculateCurrentIndex() else {
             return
         }
+        selectedIndex = index
         self.delegate?.pickerView(self, selected: index)
     }
     
@@ -110,6 +133,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         guard let index = calculateCurrentIndex() else {
             return
         }
+        selectedIndex = index
         self.delegate?.pickerView(self, selected: index)
     }
     

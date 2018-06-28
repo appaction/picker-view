@@ -10,9 +10,17 @@ import UIKit
 import Anchorage
 import PickerView
 
-class ViewController: UIViewController, PickerViewDelegate {
+class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource {
+    let cameraModes = ["Matt", "Smells", "Like", "Vegemite"]
+    func pickerViewNumberOfItems(_ pickerView: PickerView) -> Int {
+        return cameraModes.count
+    }
+    
+    func pickerView(_ pickerView: PickerView, itemAtIndex index: Int) -> String {
+        return cameraModes[index]
+    }
+    
     func pickerView(_ pickerView: PickerView, selected index: Int) {
-        print(index)
     }
 
     weak var pickerView: PickerView!
@@ -24,6 +32,7 @@ class ViewController: UIViewController, PickerViewDelegate {
             picker.heightAnchor == 40
             picker.backgroundColor = UIColor.blue
             picker.delegate = self
+            picker.dataSource = self
             picker.select(index: 3, animated: false)
         })
         
