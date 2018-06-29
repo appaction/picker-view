@@ -157,6 +157,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     }
     
     public func reloadData() {
+        selectedIndex = nil
         collectionView.reloadData()
     }
 }
