@@ -161,7 +161,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     
     public func select(index: Int, animated: Bool) {
         selectedIndex = index
-        collectionView.selectItem(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: .centeredHorizontally)
+        collectionView.selectItem(at: IndexPath(row: index, section: 0), animated: animated, scrollPosition: .centeredHorizontally)
     }
     
     public func reloadData() {
