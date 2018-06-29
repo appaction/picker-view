@@ -22,9 +22,9 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     private let layout = UICollectionViewFlowLayout()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     public var collectionViewBackgroundColor: UIColor = .clear
-    public var itemFont: UIFont = UIFont.systemFont(ofSize: 16)
-    public var itemColor: UIColor = .white
-    public var selectedItemColor: UIColor = .blue
+    public var itemFont: UIFont = UIFont.systemFont(ofSize: 18)
+    public var itemColor: UIColor = UIColor(displayP3Red: 167, green: 167, blue: 167, alpha: 90)
+    public var selectedItemColor: UIColor = .white
     
     let cellWidth: CGFloat = 120
     let cellSpacing: CGFloat = 20
