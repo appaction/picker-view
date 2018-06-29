@@ -155,6 +155,10 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         selectedIndex = index
         collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
     }
+    
+    public func reloadData() {
+        collectionView.reloadData()
+    }
 }
 
 class PickerViewCell: UICollectionViewCell {
