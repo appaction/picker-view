@@ -27,7 +27,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     public var selectedItemColor: UIColor = .white
     
     let cellWidth: CGFloat = 120
-    let cellSpacing: CGFloat = 20
+    let cellSpacing: CGFloat = 16
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
