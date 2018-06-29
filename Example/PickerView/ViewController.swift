@@ -26,11 +26,12 @@ class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource
     weak var pickerView: PickerView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         pickerView = view.add(subview: PickerView(), configure: { (picker, view) in
             picker.centerAnchors == view.centerAnchors
             picker.widthAnchor == view.widthAnchor
             picker.heightAnchor == 40
-            picker.backgroundColor = UIColor.blue
+            picker.itemColor = .white
             picker.delegate = self
             picker.dataSource = self
             picker.select(index: 3, animated: false)

@@ -21,7 +21,11 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     private var selectedIndex: Int?
     private let layout = UICollectionViewFlowLayout()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-    private let markerView = UIView()
+    public var collectionViewBackgroundColor: UIColor = .clear
+    public var itemFont: UIFont = UIFont.systemFont(ofSize: 16)
+    public var itemColor: UIColor = .white
+    public var selectedItemColor: UIColor = .white
+    
     let cellWidth: CGFloat = 120
     let cellSpacing: CGFloat = 20
     
@@ -46,15 +50,9 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
             collectionView.alwaysBounceVertical = false
             collectionView.showsHorizontalScrollIndicator = false
             collectionView.edgeAnchors == pickerView.edgeAnchors
-            collectionView.backgroundColor = UIColor.yellow
+            collectionView.backgroundColor = collectionViewBackgroundColor
             collectionView.delegate = self
         })
-        
-        add(subview: markerView) { markerView, pickerView in
-            markerView.widthAnchor == 2
-            markerView.centerXAnchor == pickerView.centerXAnchor
-            markerView.backgroundColor = .red
-        }
     }
     
     public override func layoutSubviews() {
@@ -72,7 +70,11 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PickerViewCell", for: indexPath) as! PickerViewCell
+        cell.backgroundColor = .clear
         cell.label.text = dataSource?.pickerView(self, itemAtIndex: indexPath.row)
+        cell.highlightedTextColor = selectedItemColor
+        cell.textColor = itemColor
+        cell.font = itemFont
         return cell
     }
     
@@ -103,7 +105,6 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         
         if let index = selectedIndex {
             if indexPath.row == index {
-                print(velocity.x)
                 if velocity.x >= 0, let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: IndexPath(item: index + 1, section: 0)) {
                     targetContentOffset.pointee.x = attributes.frame.origin.x - layout.sectionInset.left
                     return
@@ -156,9 +157,11 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     }
 }
 
-
 class PickerViewCell: UICollectionViewCell {
-    let label = UILabel()
+    let label = ShadowLabel()
+    var textColor: UIColor = .white
+    var highlightedTextColor: UIColor = .white
+    var font: UIFont = UIFont(name: "Nunito-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -170,10 +173,10 @@ class PickerViewCell: UICollectionViewCell {
     
     private func setup() {
         contentView.add(subview: label, configure: { label, cell in
-            cell.backgroundColor = UIColor.clear
             label.edgeAnchors == cell.edgeAnchors
-            label.textColor = UIColor.black
             label.textAlignment = .center
+            label.highlightedTextColor = highlightedTextColor
+            label.textColor = textColor
         })
     }
 }
@@ -187,5 +190,26 @@ extension SubviewAddable where Self: UIView {
         addSubview(subview)
         configure(subview, self)
         return subview
+    }
+}
+
+class ShadowLabel: UILabel {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    func setup() {
+        self.shadowColor = UIColor.darkGray
+        self.layer.shadowOpacity = 0.9
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.masksToBounds = false
+        self.layer.shouldRasterize = true
+        self.layer.shadowRadius = 1
     }
 }
