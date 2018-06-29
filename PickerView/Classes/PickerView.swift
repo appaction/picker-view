@@ -24,7 +24,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     public var collectionViewBackgroundColor: UIColor = .clear
     public var itemFont: UIFont = UIFont.systemFont(ofSize: 16)
     public var itemColor: UIColor = .white
-    public var selectedItemColor: UIColor = .white
+    public var selectedItemColor: UIColor = .blue
     
     let cellWidth: CGFloat = 120
     let cellSpacing: CGFloat = 20
@@ -72,9 +72,9 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PickerViewCell", for: indexPath) as! PickerViewCell
         cell.backgroundColor = .clear
         cell.label.text = dataSource?.pickerView(self, itemAtIndex: indexPath.row)
-        cell.highlightedTextColor = selectedItemColor
-        cell.textColor = itemColor
-        cell.font = itemFont
+        cell.label.font = itemFont
+        cell.label.textColor = itemColor
+        cell.label.highlightedTextColor = selectedItemColor
         return cell
     }
     
@@ -86,6 +86,13 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         return cellSpacing
     }
     
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         var closestCell : UICollectionViewCell = collectionView.visibleCells[0];
         for cell in collectionView.visibleCells {
@@ -123,7 +130,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         guard let index = calculateCurrentIndex() else {
             return
         }
-        selectedIndex = index
+        select(index: index, animated: false)
         self.delegate?.pickerView(self, selected: index)
     }
     
@@ -134,7 +141,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         guard let index = calculateCurrentIndex() else {
             return
         }
-        selectedIndex = index
+        select(index: index, animated: false)
         self.delegate?.pickerView(self, selected: index)
     }
     
@@ -153,7 +160,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     
     public func select(index: Int, animated: Bool) {
         selectedIndex = index
-        collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
+        collectionView.selectItem(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: .centeredHorizontally)
     }
     
     public func reloadData() {
@@ -164,9 +171,6 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
 
 class PickerViewCell: UICollectionViewCell {
     let label = ShadowLabel()
-    var textColor: UIColor = .white
-    var highlightedTextColor: UIColor = .white
-    var font: UIFont = UIFont(name: "Nunito-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -180,8 +184,6 @@ class PickerViewCell: UICollectionViewCell {
         contentView.add(subview: label, configure: { label, cell in
             label.edgeAnchors == cell.edgeAnchors
             label.textAlignment = .center
-            label.highlightedTextColor = highlightedTextColor
-            label.textColor = textColor
         })
     }
 }
