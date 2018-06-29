@@ -31,7 +31,6 @@ class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource
             picker.centerAnchors == view.centerAnchors
             picker.widthAnchor == view.widthAnchor
             picker.heightAnchor == 40
-            picker.itemColor = .white
             picker.delegate = self
             picker.dataSource = self
             picker.select(index: 3, animated: false)

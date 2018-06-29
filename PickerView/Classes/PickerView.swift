@@ -23,8 +23,8 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     public var collectionViewBackgroundColor: UIColor = .clear
     public var itemFont: UIFont = UIFont.systemFont(ofSize: 18)
-    public var itemColor: UIColor = UIColor(displayP3Red: 167, green: 167, blue: 167, alpha: 90)
-    public var selectedItemColor: UIColor = .white
+    public var itemColor: UIColor = .gray
+    public var selectedItemColor: UIColor = .gray
     
     let cellWidth: CGFloat = 120
     let cellSpacing: CGFloat = 16
@@ -46,7 +46,8 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
             collectionView.collectionViewLayout = layout
             collectionView.register(PickerViewCell.self, forCellWithReuseIdentifier: "PickerViewCell")
             collectionView.isScrollEnabled = true
-            collectionView.alwaysBounceHorizontal = true
+            collectionView.alwaysBounceHorizontal = false
+            collectionView.bounces = false
             collectionView.alwaysBounceVertical = false
             collectionView.showsHorizontalScrollIndicator = false
             collectionView.edgeAnchors == pickerView.edgeAnchors
@@ -73,8 +74,8 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         cell.backgroundColor = .clear
         cell.label.text = dataSource?.pickerView(self, itemAtIndex: indexPath.row)
         cell.label.font = itemFont
-        cell.label.textColor = itemColor
         cell.label.highlightedTextColor = selectedItemColor
+        cell.label.textColor = itemColor
         return cell
     }
     
