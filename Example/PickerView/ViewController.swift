@@ -12,6 +12,7 @@ import PickerView
 
 class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource {
     let cameraModes = ["Matt", "Smells", "Like", "Vegemite"]
+    
     func pickerViewNumberOfItems(_ pickerView: PickerView) -> Int {
         return cameraModes.count
     }
@@ -27,6 +28,13 @@ class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        let leftSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swiper(_:)))
+        view.addGestureRecognizer(leftSwipeGesture)
+        leftSwipeGesture.direction = .left
+        let rightSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swiper(_:)))
+        view.addGestureRecognizer(rightSwipeGesture)
+        rightSwipeGesture.direction = .right
+        
         pickerView = view.add(subview: PickerView(), configure: { (picker, view) in
             picker.centerAnchors == view.centerAnchors
             picker.widthAnchor == view.widthAnchor
@@ -57,6 +65,11 @@ class ViewController: UIViewController, PickerViewDelegate, PickerViewDataSource
     @objc
     func buttonTapped(_ sender: Any) {
         pickerView.select(index: 2, animated: true)
+    }
+    
+    @objc
+    func swiper(_ sender: UISwipeGestureRecognizer) {
+        pickerView.respondToSwipe(direction: sender.direction)
     }
 }
 

@@ -53,6 +53,8 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
             collectionView.edgeAnchors == pickerView.edgeAnchors
             collectionView.backgroundColor = collectionViewBackgroundColor
             collectionView.delegate = self
+            collectionView.allowsSelection = true
+            collectionView.isUserInteractionEnabled = true
         })
     }
     
@@ -87,11 +89,15 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
         return cellSpacing
     }
     
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -167,6 +173,23 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     public func reloadData() {
         selectedIndex = nil
         collectionView.reloadData()
+    }
+    
+    public func respondToSwipe(direction: UISwipeGestureRecognizerDirection) {
+        if let index = calculateCurrentIndex() {
+            switch direction {
+            case .right:
+                if index - 1 >= 0 {
+                    select(index: (index - 1), animated: true)
+                }
+            case .left:
+                if index + 2 <= collectionView.numberOfItems(inSection: 0) {
+                    select(index: (index + 1), animated: true)
+                }
+            default:
+                break
+            }
+        }
     }
 }
 
