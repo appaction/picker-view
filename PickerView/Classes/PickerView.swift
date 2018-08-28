@@ -181,10 +181,12 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
             case .right:
                 if index - 1 >= 0 {
                     select(index: (index - 1), animated: true)
+                    self.delegate?.pickerView(self, selected: index - 1)
                 }
             case .left:
                 if index + 2 <= collectionView.numberOfItems(inSection: 0) {
                     select(index: (index + 1), animated: true)
+                    self.delegate?.pickerView(self, selected: index + 1)
                 }
             default:
                 break
