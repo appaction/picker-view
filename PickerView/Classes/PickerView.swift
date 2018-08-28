@@ -91,6 +91,7 @@ public final class PickerView: UIView, UICollectionViewDelegateFlowLayout, UICol
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        self.delegate?.pickerView(self, selected: indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
